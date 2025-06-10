@@ -2,7 +2,7 @@
 
 **A powerful Named Entity Recognition (NER) and AI analysis tool** that extracts entities from text and provides intelligent insights using local LLMs.
 
-![App Screenshot]"C:\Users\user\Downloads\NER_Image_2.jpg"
+![App Screenshot]NER_Image_1.jpg
 
 ## Features ✨
 
