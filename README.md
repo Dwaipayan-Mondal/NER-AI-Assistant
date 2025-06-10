@@ -5,7 +5,7 @@
 ![App Screenshot](https://github.com/Dwaipayan-Mondal/NER-AI-Assistant/blob/main/NER_Image_1.jpg)
 ![App Screenshot](https://github.com/Dwaipayan-Mondal/NER-AI-Assistant/blob/main/NER_Image_2.jpg)
 
-## Features ✨
+## Features
 
 - **Named Entity Recognition** using spaCy's `en_core_web_sm` model
 - **AI-powered analysis** via local LLM (Ollama)
@@ -14,7 +14,7 @@
 - **Modern UI** with responsive design
 - **Console logging** for development tracking
 
-## Tech Stack 🛠️
+## Tech Stack 
 
 **Backend:**
 - Python 3.11+
@@ -30,12 +30,11 @@
 **Local AI:**
 - Ollama (running LLM models locally)
 
-## Installation ⚙️
+## Installation 
 
 ### Prerequisites
 - Python 3.11+
-- Ollama installed and running (with at least one model downloaded)
-- Node.js (optional for frontend development)
+- Ollama installed and running (with at least one model downloaded)(tested with llama 2)
 
 ### Backend Setup
 ```bash
