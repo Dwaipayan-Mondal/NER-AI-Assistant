@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Analyzer Pro | NER + AI Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --accent: #fd79a8;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #e17055;
+            --info: #0984e3;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-weight: 300;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            padding: 2rem;
+        }
+        
+        .input-section {
+            margin-bottom: 2rem;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 1rem;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+        
+        button {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        button:hover {
+            background-color: #5649d1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .output-section {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .section-title svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .entities-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .entity {
+            padding: 0.5rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .entity svg {
+            margin-right: 0.3rem;
+            width: 14px;
+            height: 14px;
+        }
+        
+        .no-entities {
+            color: #636e72;
+            font-style: italic;
+        }
+        
+        .llm-response {
+            background: white;
+            padding: 1.25rem;
+            border-radius: 8px;
+            font-family: 'Roboto Mono', monospace;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            color: var(--primary);
+        }
+        
+        .loading-spinner {
+            border: 3px solid rgba(108, 92, 231, 0.2);
+            border-radius: 50%;
+            border-top: 3px solid var(--primary);
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 0.5rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #636e72;
+            font-size: 0.85rem;
+        }
+        
+        /* Entity type specific colors */
+        .PERSON { background-color: #e84393; }
+        .ORG { background-color: #0984e3; }
+        .GPE { background-color: #00b894; }
+        .DATE { background-color: #fdcb6e; color: var(--dark); }
+        .TIME { background-color: #a29bfe; }
+        .MONEY { background-color: #00cec9; }
+        .PERCENT { background-color: #fab1a0; color: var(--dark); }
+        .PRODUCT { background-color: #74b9ff; }
+        .EVENT { background-color: #fd79a8; }
+        .NORP { background-color: #55efc4; color: var(--dark); }
+        .FAC { background-color: #a55eea; }
+        .LOC { background-color: #fd9644; }
+        .LANGUAGE { background-color: #778ca3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Text Analyzer Pro</h1>
+            <p class="subtitle">Named Entity Recognition with AI Assistant</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="input-section">
+                <label for="promptInput" class="input-label">Enter your text to analyze:</label>
+                <textarea id="promptInput" placeholder="Type or paste your text here (e.g., 'Apple is looking to buy a UK startup for $1 billion in January 2024')"></textarea>
+                <div class="button-group">
+                    <button id="sendButton">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.5.5 0 0 1-.928.086L7.5 11.5l-4.147 4.33a.5.5 0 0 1-.758-.067L.146 11.54a.5.5 0 0 1 .054-.674L11.316.146a.5.5 0 0 1 .538-.054z"/>
+                        </svg>
+                        Analyze
+                    </button>
+                </div>
+            </div>
+            
+            <div class="loading" id="loadingIndicator">
+                <div class="loading-spinner"></div>
+                <p>Processing your text...</p>
+            </div>
+            
+            <div class="output-section" id="resultsSection" style="display: none;">
+                <h2 class="section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                    </svg>
+                    Analysis Results
+                </h2>
+                
+                <div class="entities">
+                    <h3 class="section-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                        </svg>
+                        Detected Entities
+                    </h3>
+                    <div class="entities-container" id="entitiesContainer">
+                        <div class="no-entities">No entities detected yet. Enter text and click "Analyze"</div>
+                    </div>
+                </div>
+                
+                <div class="llm">
+                    <h3 class="section-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M2.5 1A1.5 1.5 0 0 0 1 2.5v11A1.5 1.5 0 0 0 2.5 15h6.086a1.5 1.5 0 0 0 1.06-.44l4.915-4.914A1.5 1.5 0 0 0 15 8.586V2.5A1.5 1.5 0 0 0 13.5 1h-11zM2 2.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 .5.5V8H9.5A1.5 1.5 0 0 0 8 9.5V14H2.5a.5.5 0 0 1-.5-.5v-11zm7 11.293V9.5a.5.5 0 0 1 .5-.5h4.293L9 13.793z"/>
+                        </svg>
+                        AI Insights
+                    </h3>
+                    <div class="llm-response" id="llmResponse">The AI response will appear here after analysis.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Text Analyzer Pro &copy; 2023 | Powered by spaCy NER and Local LLM</p>
+    </footer>
+
+    <script>
+        document.getElementById("sendButton").addEventListener("click", async () => {
+            const prompt = document.getElementById("promptInput").value.trim();
+            if (!prompt) return;
+            
+            // Show loading indicator
+            document.getElementById("loadingIndicator").style.display = "block";
+            document.getElementById("resultsSection").style.display = "none";
+            
+            try {
+                const response = await fetch("http://localhost:8000/process-prompt", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ text: prompt }),
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Hide loading indicator
+                document.getElementById("loadingIndicator").style.display = "none";
+                
+                // Display entities
+                const entitiesContainer = document.getElementById("entitiesContainer");
+                entitiesContainer.innerHTML = "";
+                
+                if (data.entities && data.entities.length > 0) {
+                    data.entities.forEach(([text, label]) => {
+                        const entityEl = document.createElement("div");
+                        entityEl.className = `entity ${label}`;
+                        entityEl.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                            </svg>
+                            ${text} <small>(${label})</small>
+                        `;
+                        entitiesContainer.appendChild(entityEl);
+                    });
+                } else {
+                    entitiesContainer.innerHTML = '<div class="no-entities">No named entities detected in this text.</div>';
+                }
+                
+                // Display LLM response
+                document.getElementById("llmResponse").textContent = data.llm_response;
+                
+                // Show results section
+                document.getElementById("resultsSection").style.display = "block";
+                
+                // Print to console
+                console.log("Detected named entities:", data.entities);
+                console.log("LLM response:", data.llm_response);
+                
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("loadingIndicator").style.display = "none";
+                document.getElementById("resultsSection").style.display = "block";
+                document.getElementById("llmResponse").textContent = `Error: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
