@@ -2,7 +2,7 @@
 
 **A powerful Named Entity Recognition (NER) and AI analysis tool** that extracts entities from text and provides intelligent insights using local LLMs.
 
-![App Screenshot](https://via.placeholder.com/800x500.png?text=Text+Analyzer+Pro+Screenshot) *(Replace with actual screenshot)*
+![App Screenshot](https://via.placeholder.com/800x500.png?text=Text+Analyzer+Pro+Screenshot) 
 
 ## Features ✨
 
@@ -45,9 +45,6 @@ cd text-analyzer-pro/backend
 # Create and activate virtual environment
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
 
 # Download spaCy model
 python -m spacy download en_core_web_sm
